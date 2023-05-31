@@ -1,0 +1,51 @@
+\section{VAC Model}
+$VAC$ model measures the control power by comprehensively considering the information in $HEG$ with acting in concert ($ACT$) probability. It adopts the method based on game theory to compute voting rights. However, under the influence $ACT$, the probability of each voting result is different. We set $P$ to calculate the probability of each voting result.
+
+We illustrate the process of obtaining the stochastic vote $X=(x_1,x_2,...x_n) \in\{0,1\}^n$ of all nodes by setting the initial vote $X_u=(x_1,x_2,...x_s) \in \{0,1\}^s$ of the ultimate shareholders $V_u=(v_1,v_2,...,v_s)$ for the subgraphs penetrated from $HEG$. Following the voting game approach \citep{levy_banzhaf_2011}, we select the total shareholding ratio greater than 50\% as the judgment basis. The voting process is described as follows.
+\begin{equation}
+x^{(k+1)}_i = \begin{cases}
+1 &\sum_{t\in N_i} w(\varepsilon_{ti})x^k_t > 50\%\\
+0 & \text{otherwise}
+\label{voting}
+\end{cases}
+\end{equation}
+where $N_i$ is the subset of $\epsilon$ in $EKG$ that out node is $v_i$. The value of $x^{(k+1)}_i$ is determined based on the sum of weighted votes from neighboring nodes. We repeat this process until convergence, where $x_i=x^{(K)}_i=x^{(K-1)}_i$ represents the vote results of $v_i$. Note that the votes of ultimate shareholders remain unchanged throughout the voting process, as they are not controlled by other nodes.
+
+Let $M_{ij}$ be the probability of two nodes $v_i$ and $v_j$ voting in the same way from all stochastic votes. Unlike $ACT$ probability, which is a priori and has no association to the voting process, $M_{ij}$ is posteriori, and obtained by the result of the voting process. And it is calculated by 
+  \begin{equation}
+   \begin{aligned}
+    M_{ij} &=p(vote_i(X)=vote_j(X))\\
+    &= p(vote_i(X)=vote_j(X)|v_i \Rightarrow v_j)p(v_i \Rightarrow v_j)\\
+    &+p(vote_i(X)=vote_j(X)|v_i \not\Rightarrow v_j)p(v_i \not\Rightarrow v_j)\\
+    &=1\times Z_{ij}+\frac{1}{2}\times(1-Z_{ij})\\
+    % &=\frac{1+Z_{ij}}{2}\\
+   \end{aligned}
+ \label{vac index}
+ \end{equation}
+where $\Rightarrow$  and  $\not\Rightarrow$  represent $v_i$ is decisive in $v_j$ and $v_i$ is not decisive in $v_j$, respectively. From the Definition 4 of the control power, $p(v_i \Rightarrow v_j)=Z_{ij}$ and $p(v_i \not\Rightarrow v_j)=1-Z_{ij}$.  If $v_i$ is decisive in $v_j$, then the vote of $v_i$ and $v_j$ must be the same, thus $p(vote_i(X)=vote_j(X)|v_i \Rightarrow v_j)=1$. Otherwise, $v_i$ and $v_j$ are independent of each other, then $p(vote_i(X)=vote_j(X)|p(v_i \not\Rightarrow v_j))=1/2$.
+
+And regarding $p(vote_i(X)=vote_j(X)|p(v_i \not\Rightarrow v_j))=1/2$, the following theorem holds.
+\begin{theorem}
+For $\forall v_i , v_j \in V$ , $0.5<\rho_{ij} \leq 1$. And if $\rho_{ij}=0.5$, $v_i$ and $v_j$ are independent of each other. If $\rho_{ij}=1$, then $v_i$ and $v_j$ act in concert.
+\label{probability}
+\end{theorem}
+\begin{proof}
+For any two shareholders $v_i$ and $v_j$, when they vote for certain enterprise, they get two choices, 0 or 1, representing agree or against. If $v_i$ and $v_j$ are independent, then we get 4 vote results, i.e., $\{0,0\},\{0,1\},\{1,0\}$ and $\{1,1\}$. From the results, the probability of the two making the same action is 0.5, $\rho_{ij}=0.5$. And through the same analysis, it can be obtained that when the two are completely dependent, $\rho_{ij}= 1$.
+\end{proof} 
+
+
+Then the control power of $v_i$ to $v_j$ can be deduced by $M_{ij}$. And the control power of $v_i$ to $v_j$ can be calculated as:
+\begin{equation}
+ \begin{aligned}
+    &M_{ij} =p(vote_i(X)=vote_j(X))= \sum_{X_u\in \{0,1\}^s}p(X)vr(x_i,x_j)\\
+    & Z_{ij}=p(vote_j(X|x_i)\not= vote_j(X|x_i\to x_i'))=2\times M_{ij} -1
+   \end{aligned}
+\end{equation}
+
+where  $p(X)$ represents the probability of the stochastic vote results $X$, which are calculated based on the set of $ACT$ probabilities. $vr$ represents the evaluation of vote results for $v_i$ and $v_j$, with $vr(x_i,x_j)=0$ if $x_i \neq x_j$, and $vr(x_i,x_j)=1$ if $x_i = x_j$.
+\section{Control Disclosure based on control power}
+The controller is related to the control power of all shareholders of a certain company. Specifically, it determines how many controllers the company has based on the following formula,
+\begin{equation}
+    k_j=\frac{(\sum_{i=1}^s Z_{ij})^2}{\sum_{i=1}^s Z_{ij}^2}
+\end{equation}
+Then controllers of the company is the shareholders with top-$k_j$ control power.
